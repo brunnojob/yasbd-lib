@@ -25,6 +25,7 @@ class ParagraphStream:
         source: str | TextIOBase | StreamCleanerStub,
         *,
         skip_empty_lines: bool = False,
+        max_paragraph_chars: int | None = None,
     ) -> None:
         """Initialize ParagraphStream.
 
@@ -33,6 +34,13 @@ class ParagraphStream:
             skip_empty_lines: If True, blank separator lines are omitted from paragraph blocks.
         """
         self.skip_empty_lines = skip_empty_lines
+        if max_paragraph_chars is not None and (
+            not isinstance(max_paragraph_chars, int) or isinstance(max_paragraph_chars, bool)
+            or max_paragraph_chars < 1
+        ):
+            raise ValueError("max_paragraph_chars must be a positive integer")
+        self.max_paragraph_chars = max_paragraph_chars
+        self._buffer_chars = 0
 
         # Normalise to an iterator so __next__ can call next() on it
         # StringIO works line-by-line and supports the iterator protocol natively
@@ -51,8 +59,19 @@ class ParagraphStream:
         if self._buffer:
             paragraph = "".join(self._buffer)
             self._buffer = []
+            self._buffer_chars = 0
             return paragraph
         raise StopIteration
+
+    def _append(self, line: str) -> None:
+        size = self._buffer_chars + len(line)
+        if self.max_paragraph_chars is not None and size > self.max_paragraph_chars:
+            self._buffer = []
+            self._buffer_chars = 0
+            self.close()
+            raise ValueError("paragraph exceeds max_paragraph_chars")
+        self._buffer.append(line)
+        self._buffer_chars = size
 
     def __next__(self) -> str:
         """Advance the stream and return the next paragraph.
@@ -81,11 +100,13 @@ class ParagraphStream:
             # boundary. Emit the buffered paragraph (or drop it if empty + skip_empty_lines)
             if stripped_line and self._is_flush_pending:
                 if not self._buffer and self.skip_empty_lines:
-                    self._buffer = [line]
+                    self._append(line)
                     self._is_flush_pending = False
                     continue
                 paragraph = "".join(self._buffer)
-                self._buffer = [line]
+                self._buffer = []
+                self._buffer_chars = 0
+                self._append(line)
                 self._is_flush_pending = False
                 return paragraph
 
@@ -94,7 +115,7 @@ class ParagraphStream:
             if self.skip_empty_lines and not stripped_line:
                 continue
 
-            self._buffer.append(line)
+            self._append(line)
 
     def close(self) -> None:
         """Close the underlying source stream if applicable."""

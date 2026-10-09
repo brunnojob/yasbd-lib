@@ -233,3 +233,9 @@ skills-lock.json
 # Temporary working files
 issue.md
 pr.md
+
+build-native/
+
+runtime-regressions
+
+.netlify/

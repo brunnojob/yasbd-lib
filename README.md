@@ -658,3 +658,11 @@ Interested in contributing? See the [**Contributing Guide**](https://github.com/
 **yasbd** is maintained by [speedyk-005](https://github.com/speedyk-005). Licensed under [Mozilla Public License 2.0](https://github.com/speedyk-005/yasbd-lib/blob/main/LICENSE).
 
 If you find this project helpful, please consider giving it a ⭐!
+
+## Implementation update
+
+`ParagraphStream(..., max_paragraph_chars=1000000)` bounds buffered Unicode characters per paragraph. Invalid limits are rejected; exceeding the limit clears the buffer, closes the source and raises ValueError. The default preserves existing unbounded behavior. Upstream authorship and MPL-2.0 licensing remain intact.
+
+Credits for this fork's updates: [brunnodev.store](https://brunnodev.store). Original authors retain their respective attribution.
+
+Contribution trailer: `Co-authored-by: nyctophile <33561761+ineedfoundmyway@users.noreply.github.com>`.
