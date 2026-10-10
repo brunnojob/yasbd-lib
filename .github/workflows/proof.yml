@@ -1,0 +1,41 @@
+name: Executable proof
+'on':
+  push:
+    paths-ignore:
+    - docs/proof/**
+    - README.md
+  pull_request: {}
+  workflow_dispatch: {}
+permissions:
+  contents: read
+concurrency:
+  group: proof-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v7
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: Install the latest version of uv and set the python version
+      uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+      with:
+        python-version: '3.12'
+        activate-environment: true
+    - name: Record executable proof
+      run: python .proof/record.py
+    - name: Upload execution evidence
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: execution-proof
+        path: docs/proof/
+        if-no-files-found: error
+        retention-days: 30
+    - name: Publish proof summary
+      if: always()
+      run: python .proof/summary.py

@@ -1,0 +1,61 @@
+{
+  "repository": "brunnojob/yasbd-lib",
+  "inputs": [
+    ".proof/scenarios.json",
+    ".proof/demo.py"
+  ],
+  "cases": [
+    {
+      "name": "Install Dependencies",
+      "argv": [
+        "bash",
+        "-e",
+        "-o",
+        "pipefail",
+        "-c",
+        "uv pip install -e \".[dev]\" spacy langcodes py3langid\n"
+      ],
+      "timeout": 900,
+      "display": false
+    },
+    {
+      "name": "Test with Pytest",
+      "argv": [
+        "bash",
+        "-e",
+        "-o",
+        "pipefail",
+        "-c",
+        "uv run pytest -v --tb=short\n"
+      ],
+      "timeout": 900,
+      "display": true
+    },
+    {
+      "name": "Generate Coverage",
+      "argv": [
+        "bash",
+        "-e",
+        "-o",
+        "pipefail",
+        "-c",
+        "uv run pytest --cov-report=xml\n"
+      ],
+      "timeout": 900,
+      "display": true
+    },
+    {
+      "name": "Segment text into sentences without losing source whitespace",
+      "argv": [
+        "uv",
+        "run",
+        "python",
+        ".proof/demo.py"
+      ],
+      "contains": [
+        "\"lossless\": true"
+      ],
+      "timeout": 120
+    }
+  ]
+}
