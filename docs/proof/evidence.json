@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "repository": "brunnojob/yasbd-lib",
+  "source_commit": "1784811918a1402481c64edab92c9c584b9cd745",
+  "generated_at": "2026-10-10T02:36:45.520948+00:00",
+  "run_url": "https://github.com/brunnojob/yasbd-lib/actions/runs/38017591215",
+  "inputs_sha256": {
+    ".proof/scenarios.json": "6b009c0dca8a4ca1bcbc7b98bd3399d552e14a4c8fa3f540b4a7d65792fde497",
+    ".proof/demo.py": "18c5d313405274381930951b7cd33351b3fc2addd86c286226c7ee6e2298c063"
+  },
+  "cases": [
+    {
+      "display": false,
+      "name": "Install Dependencies",
+      "argv": [
+        "bash",
+        "-e",
+        "-o",
+        "pipefail",
+        "-c",
+        "uv pip install -e \".[dev]\" spacy langcodes py3langid\n"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "passed": true,
+      "seconds": 2.312,
+      "output": "Resolved 85 packages in 1.03s\n   Building yasbd-lib @ file:///home/runner/work/yasbd-lib/yasbd-lib\nDownloading srsly (1.2MiB)\nDownloading black (1.6MiB)\nDownloading thinc (3.7MiB)\nDownloading ruff (9.9MiB)\nDownloading spacy (33.9MiB)\nDownloading blis (10.8MiB)\nDownloading pygments (1.2MiB)\nDownloading py3langid (4.4MiB)\nDownloading pydantic-core (2.1MiB)\nDownloading numpy (15.9MiB)\nDownloading virtualenv (5.2MiB)\n   Building docstring-parser==0.11\n Downloaded srsly\n Downloaded pygments\n Downloaded black\n Downloaded pydantic-core\n Downloaded thinc\n Downloaded py3langid\n Downloaded virtualenv\n Downloaded ruff\n Downloaded blis\n      Built docstring-parser==0.11\n Downloaded numpy\n Downloaded spacy\n      Built yasbd-lib @ file:///home/runner/work/yasbd-lib/yasbd-lib\nPrepared 84 packages in 1.13s\nInstalled 85 packages in 54ms\n + annotated-doc==0.0.5\n + annotated-types==0.8.0\n + anyio==4.15.1\n + black==23.12.1\n + blis==1.3.3\n + catalogue==2.0.10\n + certifi==2026.7.22\n + cfgv==3.5.0\n + charset-normalizer==3.5.2\n + click==8.5.0\n + cloudpathlib==0.26.0\n + confection==1.3.3\n + coverage==7.16.2\n + cymem==2.0.13\n + databind==4.5.5\n + databind-core==4.5.5\n + databind-json==4.5.5\n + deprecated==1.3.1\n + distlib==0.4.3\n + docspec==2.2.2\n + docspec-python==2.2.1\n + docstring-parser==0.11\n + filelock==4.1.0\n + h11==0.16.0\n + httpcore==1.0.9\n + httpx==0.28.1\n + identify==2.6.20\n + idna==3.20\n + iniconfig==2.3.1\n + jinja2==3.1.6\n + langcodes==3.5.1\n + markdown-it-py==4.2.0\n + markupsafe==3.0.4\n + mdurl==0.1.2\n + murmurhash==1.0.15\n + mypy-extensions==1.1.0\n + nodeenv==1.11.0\n + nr-date==2.1.0\n + nr-stream==1.1.5\n + nr-util==0.8.12\n + numpy==2.5.3\n + packaging==26.3\n + pathspec==1.1.1\n + platformdirs==4.12.4\n + pluggy==1.6.0\n + pre-commit==4.6.2\n + preshed==3.0.13\n + py3langid==0.4.0\n + pydantic==2.14.0\n + pydantic-core==2.50.0\n + pydoc-markdown==4.8.2\n + pygments==2.21.0\n + pytest==9.1.1\n + pytest-cov==7.1.0\n + python-discovery==1.6.2\n + pyyaml==6.0.3\n + radicli==0.0.26\n + regex==2026.9.29\n + requests==2.34.2\n + retrie==0.3.1\n + rich==15.0.0\n + ruff==0.17.0\n + setuptools==84.0.0\n + shellingham==1.5.4\n + smart-open==8.0.2\n + spacy==3.8.16\n + spacy-legacy==3.0.12\n + spacy-loggers==1.0.5\n + srsly==2.5.4\n + thinc==8.3.13\n + tomli==2.5.0\n + tomli-w==1.2.0\n + tqdm==4.70.1\n + typeapi==2.3.0\n + typer==0.27.3\n + typing-extensions==4.16.0\n + typing-inspection==0.4.4\n + urllib3==2.8.0\n + virtualenv==21.14.6\n + wasabi==1.1.3\n + watchdog==6.0.0\n + weasel==1.0.0\n + wrapt==2.5.0\n + yapf==0.43.0\n + yasbd-lib==1.0.2 (from file:///home/runner/work/yasbd-lib/yasbd-lib)\n",
+      "output_sha256": "ca1b14f4c3925627bb3f9030e37060d2cf50b6820229b26b6d1e044ad350ffe3"
+    },
+    {
+      "display": true,
+      "name": "Test with Pytest",
+      "argv": [
+        "bash",
+        "-e",
+        "-o",
+        "pipefail",
+        "-c",
+        "uv run pytest -v --tb=short\n"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "passed": true,
+      "seconds": 14.046,
+      "output": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.6.0 -- /home/runner/work/yasbd-lib/yasbd-lib/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /home/runner/work/yasbd-lib/yasbd-lib\nconfigfile: pyproject.toml\ntestpaths: tests, src/yasbd/utils, src/yasbd/cli.py\nplugins: platformdirs-4.12.4, cov-7.1.0, anyio-4.15.1\ncollecting ... collected 140 items\n\ntests/test_boundary_detector.py::test_segment_empty_input[] PASSED       [  0%]\ntests/test_boundary_detector.py::test_segment_empty_input[   ] PASSED    [  1%]\ntests/test_boundary_detector.py::test_segment_empty_input[\\n\\n\\n] PASSED [  2%]\ntests/test_boundary_detector.py::test_segment_empty_input[empty_stream] PASSED [  2%]\ntests/test_boundary_detector.py::test_invalid_lang[None-InvalidInputError-'lang' is required] PASSED [  3%]\ntests/test_boundary_detector.py::test_invalid_lang[-InvalidInputError-'lang' is required] PASSED [  4%]\ntests/test_boundary_detector.py::test_invalid_lang[xx-UnsupportedLanguageError-doesn't fit any cutting profile] PASSED [  5%]\ntests/test_boundary_detector.py::test_segment_different_input PASSED     [  5%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0] SUBPASSED(<subtest>) [  6%]\ntests/test_boundary_detector\nFull transcript in the execution-proof artifact.",
+      "output_sha256": "a2dfc64a9981508a977a7519c5020df0b7152d96d1d60debab000bf83e43e5b2",
+      "output_truncated": true
+    },
+    {
+      "display": true,
+      "name": "Generate Coverage",
+      "argv": [
+        "bash",
+        "-e",
+        "-o",
+        "pipefail",
+        "-c",
+        "uv run pytest --cov-report=xml\n"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "passed": true,
+      "seconds": 10.184,
+      "output": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.6.0\nrootdir: /home/runner/work/yasbd-lib/yasbd-lib\nconfigfile: pyproject.toml\ntestpaths: tests, src/yasbd/utils, src/yasbd/cli.py\nplugins: platformdirs-4.12.4, cov-7.1.0, anyio-4.15.1\ncollected 140 items\n\ntests/test_boundary_detector.py ........................................ [ 28%]\n.................                                                        [ 40%]\ntests/test_lang_packs.py ........                                        [ 46%]\ntests/test_paragraph_limits.py ...                                       [ 48%]\ntests/test_pysbd_adapter.py ........                                     [ 54%]\ntests/test_regex_caching.py ..                                           [ 55%]\ntests/test_spacy_component.py ....                                       [ 58%]\ntests/test_universal_regression.py ..................................... [ 85%]\n...........                                                              [ 92%]\nsrc/yasbd/utils/cleaner.py .                                             [ 93%]\nsrc/yasbd/utils/input_validator.py .                                     [ 94%]\nsrc/yasbd/utils/lang_code_normalizer.py .                                [ 95%]\nsrc/yasbd/utils/language_classifier.py .                                 [ 95%]\nsrc/yasbd/utils/logger.py .                                              [ 96%]\nsrc/yasbd/utils/paragraph_stream.py .                                    [ 97%]\nsrc/yasbd/cli.py ....                                                    [100%]\n\n================================ tests coverage ================================\n_______________ coverage: platform linux, python 3.12.15-final-0 _______________\n\nName                                      Stmts   Miss  Cover   Missing\n-----------------------------------------------------------------------\nsrc/yasbd/__init__.py                        15      2    87%   16-17\nsrc/yasbd/boundary_detector.py              133     11    92%   101, 121, 124-126, 139-141, 178-179, 202\nsrc/yasbd/rules/__init__.py                  58      4    93%   71-72, 137, 144\nsrc/yasbd/rules/base.py                      75      1    99%   451\nsrc/yasbd/utils/cleaner.py                   87      3    97%   111, 255, 278\nsrc/yasbd/utils/lang_code_normalizer.py      19      3    84%   10, 72-73\nsrc/yasbd/utils/paragraph_stream.py          59      3    95%   103-105\nsrc/yasbd/utils/pysbd_adapter.py             78      6    92%   32, 35, 77, 81-83\n-----------------------------------------------------------------------\nTOTAL                                      1078     33    97%\n\n46 files skipped due to complete coverage.\nCoverage XML written to file coverage.xml\n============================= slowest 10 durations =============================\n0.44s call     src/yasbd/utils/language_classifier.py::yasbd.utils.language_classifier.classify_language\n0.38s call     tests/test_spacy_component.py::test_lang_defaults_to_pipeline_lang\n0.19s call     tests/test_boundary_detector.py::test_segment_multiple_langs[es-test_data31]\n0.19s call     tests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0]\n0.17s call     tests/test_boundary_detector.py::test_segment_multiple_langs[nl-test_data10]\n0.16s call     tests/test_boundary_detector.py::test_segment_multiple_langs[de-test_data13]\n0.15s setup    tests/test_boundary_detector.py::test_segment_empty_input[]\n0.15s call\nFull transcript in the execution-proof artifact.",
+      "output_sha256": "7977eb0eb0082064edd8123ec6da53d98ba02960d3f5e59a894f0837c468bf6f",
+      "output_truncated": true
+    },
+    {
+      "display": true,
+      "name": "Segment text into sentences without losing source whitespace",
+      "argv": [
+        "uv",
+        "run",
+        "python",
+        ".proof/demo.py"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "passed": true,
+      "seconds": 0.151,
+      "output": "{\"input\": \"Alpha. Beta. Gamma. Delta.\", \"sentences\": [\"Alpha.\", \" Beta.\", \" Gamma.\", \" Delta.\"], \"lossless\": true}\n",
+      "output_sha256": "968f2c73ee23e6093f241de3e41cd1fbacc3fe63db5a3d6ade35ef97a2b154d7"
+    }
+  ],
+  "passed": true
+}
