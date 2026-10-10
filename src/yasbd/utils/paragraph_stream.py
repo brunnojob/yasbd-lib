@@ -35,7 +35,8 @@ class ParagraphStream:
         """
         self.skip_empty_lines = skip_empty_lines
         if max_paragraph_chars is not None and (
-            not isinstance(max_paragraph_chars, int) or isinstance(max_paragraph_chars, bool)
+            not isinstance(max_paragraph_chars, int)
+            or isinstance(max_paragraph_chars, bool)
             or max_paragraph_chars < 1
         ):
             raise ValueError("max_paragraph_chars must be a positive integer")
