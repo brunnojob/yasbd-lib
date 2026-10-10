@@ -1,34 +1,10 @@
 $ bash -e -o pipefail -c uv pip install -e ".[dev]" spacy langcodes py3langid
 
-Resolved 85 packages in 1.03s
+Resolved 85 packages in 10ms
    Building yasbd-lib @ file:///home/runner/work/yasbd-lib/yasbd-lib
-Downloading srsly (1.2MiB)
-Downloading black (1.6MiB)
-Downloading thinc (3.7MiB)
-Downloading ruff (9.9MiB)
-Downloading spacy (33.9MiB)
-Downloading blis (10.8MiB)
-Downloading pygments (1.2MiB)
-Downloading py3langid (4.4MiB)
-Downloading pydantic-core (2.1MiB)
-Downloading numpy (15.9MiB)
-Downloading virtualenv (5.2MiB)
-   Building docstring-parser==0.11
- Downloaded srsly
- Downloaded pygments
- Downloaded black
- Downloaded pydantic-core
- Downloaded thinc
- Downloaded py3langid
- Downloaded virtualenv
- Downloaded ruff
- Downloaded blis
-      Built docstring-parser==0.11
- Downloaded numpy
- Downloaded spacy
       Built yasbd-lib @ file:///home/runner/work/yasbd-lib/yasbd-lib
-Prepared 84 packages in 1.13s
-Installed 85 packages in 54ms
+Prepared 1 package in 864ms
+Installed 85 packages in 79ms
  + annotated-doc==0.0.5
  + annotated-types==0.8.0
  + anyio==4.15.1
@@ -204,14 +180,13 @@ TOTAL                                      1078     33    97%
 46 files skipped due to complete coverage.
 Coverage XML written to file coverage.xml
 ============================= slowest 10 durations =============================
-0.44s call     src/yasbd/utils/language_classifier.py::yasbd.utils.language_classifier.classify_language
-0.38s call     tests/test_spacy_component.py::test_lang_defaults_to_pipeline_lang
+0.40s call     src/yasbd/utils/language_classifier.py::yasbd.utils.language_classifier.classify_language
+0.36s call     tests/test_spacy_component.py::test_lang_defaults_to_pipeline_lang
 0.19s call     tests/test_boundary_detector.py::test_segment_multiple_langs[es-test_data31]
 0.19s call     tests/test_boundary_detector.py::test_segment_multiple_langs[af-test_data0]
 0.17s call     tests/test_boundary_detector.py::test_segment_multiple_langs[nl-test_data10]
 0.16s call     tests/test_boundary_detector.py::test_segment_multiple_langs[de-test_data13]
-0.15s setup    tests/test_boundary_detector.py::test_segment_empty_input[]
-0.15s call
+0.15s call     tests/test_boundary_detector.py::test_segment_multiple_langs[da-test_d
 Full transcript in the execution-proof artifact.
 $ uv run python .proof/demo.py
 {"input": "Alpha. Beta. Gamma. Delta.", "sentences": ["Alpha.", " Beta.", " Gamma.", " Delta."], "lossless": true}
