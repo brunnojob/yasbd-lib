@@ -243,6 +243,8 @@ That's awesome. See [**Contributing Guide**](https://github.com/speedyk-005/yasb
 from yasbd.boundary_detector import BoundaryDetector
 # Or from yasbd import BoundaryDetector
 
+[View execution evidence](https://brunnojob.github.io/devstart-lab/proofs/yasbd-lib/)
+
 # Basic setup
 detector = BoundaryDetector(lang="en")
 
