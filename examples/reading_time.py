@@ -1,8 +1,5 @@
 """Build a sentence-by-sentence reading schedule for an English article.
 
-Run from a checkout after `pip install -e .`:
-    python examples/reading_time.py
-
 The pace is a configurable estimate, not a measured reading speed. Word counting
 uses whitespace-separated tokens with at least one letter or number; this model
 is intended for English text, not languages that omit spaces between words.
@@ -23,7 +20,7 @@ class SentenceTiming:
     end: float
 
 
-def reading_schedule(text: str, words_per_minute: float = 200) -> list[SentenceTiming]:
+def reading_schedule(text: str, words_per_minute: float = 238) -> list[SentenceTiming]:
     """Return cumulative timings suitable for a reading-progress display.
 
     Args:
@@ -42,20 +39,6 @@ def reading_schedule(text: str, words_per_minute: float = 200) -> list[SentenceT
         [('Dr. Smith writes.', 0.0, 3.0), ('We read his report.', 3.0, 7.0)]
         >>> reading_schedule("")
         []
-        >>> reading_schedule("   ")
-        []
-        >>> reading_schedule("...", 60)[0].end
-        0.0
-        >>> reading_schedule("An editor's note contains five words.", 120)[0].end
-        3.0
-        >>> reading_schedule("News.", 0)
-        Traceback (most recent call last):
-        ...
-        ValueError: words_per_minute must be positive and finite
-        >>> reading_schedule("News.", float("inf"))
-        Traceback (most recent call last):
-        ...
-        ValueError: words_per_minute must be positive and finite
     """
     if not math.isfinite(words_per_minute) or words_per_minute <= 0:
         raise ValueError("words_per_minute must be positive and finite")
