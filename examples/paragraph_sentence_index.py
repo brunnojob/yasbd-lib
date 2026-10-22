@@ -1,57 +1,108 @@
-"""Build a paragraph-aware sentence index from a text stream.
+"""Build a structured document model from paragraphs and sentences.
 
-Offsets are relative to each paragraph, so a reader can highlight a sentence
-without retaining the entire input in memory. ParagraphEOF resets the offset
-after a blank-line separator. Run with ``python examples/paragraph_sentence_index.py``.
+StructDoc exposes paragraphs containing sentence objects with paragraph-relative
+character offsets. It uses ParagraphStream for paragraph grouping and
+BoundaryDetector for sentence segmentation.
+Run with ``python examples/paragraph_sentence_index.py``.
 """
 
-from collections.abc import Iterator
 from dataclasses import dataclass
-from io import StringIO, TextIOBase
+from io import StringIO
 
 from yasbd import BoundaryDetector, ParagraphEOF
+from yasbd.utils.paragraph_stream import ParagraphStream
 
 
 @dataclass(frozen=True)
-class SentenceLocation:
-    """Paragraph number and half-open character offsets within that paragraph."""
+class Sentence:
+    """A sentence and its half-open character span within a paragraph."""
 
-    paragraph: int
+    text: str
     start: int
     end: int
 
 
-def sentence_locations(source: TextIOBase, lang: str = "en") -> Iterator[SentenceLocation]:
-    """Yield locations for each sentence without reading the whole source.
+@dataclass(frozen=True)
+class Paragraph:
+    """A paragraph with its zero-based index and segmented sentences."""
+
+    index: int
+    text: str
+    sentences: tuple[Sentence, ...]
+
+
+class StructDoc:
+    """Represent text as paragraphs containing sentence objects.
 
     Args:
-        source: Open text stream. The caller remains responsible for closing it.
-        lang: Language code for the boundary detector.
-
-    Yields:
-        Zero-based paragraph numbers with ``[start, end)`` offsets. Whitespace
-        between sentences is part of the following span; trailing paragraph
-        whitespace is excluded by the boundary detector.
+        text: Full document text.
+        lang: Language code used by the sentence boundary detector.
 
     Examples:
-        >>> stream = StringIO("Dr. Green called. The clinic replied."
-        ...                   "\\n\\nNext visit is Friday.")
-        >>> [(s.paragraph, s.start, s.end) for s in sentence_locations(stream)]
-        [(0, 0, 17), (0, 17, 37), (1, 0, 21)]
+        >>> doc = StructDoc("Dr. Green called. The clinic replied.\\n\\nNext visit is Friday.")
+        >>> [(p.index, [s.text for s in p.sentences]) for p in doc.paragraphs]
+        [(0, ['Dr. Green called.', ' The clinic replied.']), (1, ['Next visit is Friday.'])]
+        >>> [(s.start, s.end) for s in doc.paragraphs[0].sentences]
+        [(0, 17), (17, 37)]
+        >>> doc.paragraphs[0].text[slice(*(
+        ...     doc.paragraphs[0].sentences[0].start,
+        ...     doc.paragraphs[0].sentences[0].end,
+        ... ))]
+        'Dr. Green called.'
     """
-    paragraph = 0
-    start = 0
-    for boundary in BoundaryDetector(lang=lang).detect(source, relative=True):
-        if boundary is ParagraphEOF:
-            paragraph += 1
+
+    def __init__(self, text: str, lang: str = "en") -> None:
+        self.text = text
+        self.lang = lang
+        self.paragraphs = tuple(self._parse_paragraphs())
+
+    def _parse_paragraphs(self):
+        detector = BoundaryDetector(lang=self.lang)
+        stream = ParagraphStream(self.text, skip_empty_lines=True)
+
+        for index, raw_paragraph in enumerate(stream):
+            paragraph_text = raw_paragraph.strip()
+            if not paragraph_text:
+                continue
+
+            sentences = []
             start = 0
-        else:
-            yield SentenceLocation(paragraph, start, boundary)
-            start = boundary
+            for boundary in detector.detect(StringIO(paragraph_text), relative=True):
+                if boundary is ParagraphEOF:
+                    continue
+                sentences.append(
+                    Sentence(
+                        text=paragraph_text[start:boundary],
+                        start=start,
+                        end=boundary,
+                    )
+                )
+                start = boundary
+
+            if start < len(paragraph_text):
+                sentences.append(
+                    Sentence(
+                        text=paragraph_text[start:],
+                        start=start,
+                        end=len(paragraph_text),
+                    )
+                )
+
+            yield Paragraph(
+                index=index,
+                text=paragraph_text,
+                sentences=tuple(sentences),
+            )
 
 
 if __name__ == "__main__":
-    sample = "Dr. Green called. The clinic replied.\n\nNext visit is Friday."
-    with StringIO(sample) as stream:
-        for location in sentence_locations(stream):
-            print(location)
+    sample = (
+        "Dr. Green called. The clinic replied.\n\n"
+        "Next visit is Friday. Please arrive early."
+    )
+    document = StructDoc(sample)
+
+    for paragraph in document.paragraphs:
+        print(f"Paragraph {paragraph.index}: {paragraph.text}")
+        for sentence in paragraph.sentences:
+            print(f"  [{sentence.start}:{sentence.end}] {sentence.text}")
