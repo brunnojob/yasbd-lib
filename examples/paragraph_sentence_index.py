@@ -1,16 +1,16 @@
 """Build a structured document model from paragraphs and sentences.
 
 StructDoc exposes paragraphs containing sentence objects with paragraph-relative
-character offsets. It uses ParagraphStream for paragraph grouping and
-BoundaryDetector for sentence segmentation.
+character offsets. BoundaryDetector.detect(relative=True) supplies sentence
+boundaries and ParagraphEOF markers in a single pass over the document.
+Paragraph text preserves leading whitespace and omits trailing whitespace.
 Run with ``python examples/paragraph_sentence_index.py``.
 """
 
+import re
 from dataclasses import dataclass
-from io import StringIO
 
-from yasbd import BoundaryDetector
-from yasbd.utils.paragraph_stream import ParagraphStream
+from yasbd import BoundaryDetector, ParagraphEOF
 
 
 @dataclass(frozen=True)
@@ -47,69 +47,73 @@ class StructDoc:
         >>> first = doc.paragraphs[0].sentences[0]
         >>> doc.paragraphs[0].text[first.start:first.end]
         'Dr. Green called.'
+        >>> text = "\\n  First.  Second.  \\r\\n \\r\\n\\tLast without punctuation  "
+        >>> padded = StructDoc(text)
+        >>> [p.text for p in padded.paragraphs]
+        ['  First.  Second.', '\\tLast without punctuation']
+        >>> [[(s.text, s.start, s.end) for s in p.sentences] for p in padded.paragraphs]
+        [[('First.', 2, 8), ('Second.', 10, 17)], [('Last without punctuation', 1, 25)]]
+        >>> all(p.text[s.start:s.end] == s.text
+        ...     for p in padded.paragraphs for s in p.sentences)
+        True
+        >>> [StructDoc(text).paragraphs for text in ("", "   ", "\\n\\n")]
+        [(), (), ()]
     """
 
     def __init__(self, text: str, lang: str = "en") -> None:
         self.text = text
         self.lang = lang
+        self._detector = BoundaryDetector(lang=lang)
         self.paragraphs = tuple(self._parse_paragraphs())
 
     def _parse_paragraphs(self):
-        detector = BoundaryDetector(lang=self.lang)
-        stream = ParagraphStream(self.text, skip_empty_lines=True)
+        separator = re.compile(r"(?:[^\S\n]*\n)+")
+        paragraph_start = 0
+        start = 0
+        index = 0
+        sentences = []
 
-        for index, raw_paragraph in enumerate(stream):
-            paragraph_text = raw_paragraph.strip()
-            if not paragraph_text:
+        for boundary in self._detector.detect(self.text, relative=True):
+            if boundary is ParagraphEOF:
+                if sentences:
+                    yield Paragraph(
+                        index=index,
+                        text=self.text[paragraph_start : paragraph_start + start],
+                        sentences=tuple(sentences),
+                    )
+                    index += 1
+                paragraph_start += start
+                gap = separator.match(self.text, paragraph_start)
+                if gap:
+                    paragraph_start = gap.end()
+                start = 0
+                sentences = []
                 continue
 
-            sentences = []
-            start = 0
-            boundaries = detector.detect(StringIO(paragraph_text), relative=True)
-
-            for boundary in boundaries:
-                raw_sentence = paragraph_text[start:boundary]
-                leading = len(raw_sentence) - len(raw_sentence.lstrip())
-                trailing = len(raw_sentence) - len(raw_sentence.rstrip())
-                sentence_start = start + leading
-                sentence_end = boundary - trailing
-                sentence_text = paragraph_text[sentence_start:sentence_end]
-
-                if sentence_text:
-                    sentences.append(
-                        Sentence(
-                            text=sentence_text,
-                            start=sentence_start,
-                            end=sentence_end,
-                        )
+            raw_sentence = self.text[paragraph_start + start : paragraph_start + boundary]
+            sentence_text = raw_sentence.strip()
+            if sentence_text:
+                sentence_start = start + len(raw_sentence) - len(raw_sentence.lstrip())
+                sentences.append(
+                    Sentence(
+                        text=sentence_text,
+                        start=sentence_start,
+                        end=sentence_start + len(sentence_text),
                     )
-                start = boundary
-
-            if start < len(paragraph_text):
-                sentence_start = start + len(paragraph_text[start:]) - len(
-                    paragraph_text[start:].lstrip()
                 )
-                sentence_end = len(paragraph_text.rstrip())
-                if sentence_start < sentence_end:
-                    sentences.append(
-                        Sentence(
-                            text=paragraph_text[sentence_start:sentence_end],
-                            start=sentence_start,
-                            end=sentence_end,
-                        )
-                    )
+            start = boundary
 
+        if sentences:
             yield Paragraph(
                 index=index,
-                text=paragraph_text,
+                text=self.text[paragraph_start : paragraph_start + start],
                 sentences=tuple(sentences),
             )
 
 
 if __name__ == "__main__":
     sample = (
-        "Dr. Green called. The clinic replied.\n\n"
-        "Next visit is Friday. Please arrive early."
+        "Dr. Green called. The clinic replied.\n\nNext visit is Friday. Please arrive early."
     )
     document = StructDoc(sample)
 
